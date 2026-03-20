@@ -32,6 +32,16 @@ export async function update(id, data) {
   return res.json();
 }
 
+export async function patch(id, data) {
+  const res = await fetch(`${base()}/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
 export async function remove(id) {
   const res = await fetch(`${base()}/${id}`, { method: "DELETE" });
   if (!res.ok) throw new Error(`${res.status}`);
