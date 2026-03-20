@@ -13,7 +13,7 @@ async function load() {
     form.campo5.value = r.campo5;
     form.campo6.checked = r.campo6 === true || r.campo6 === "true";
   } catch (e) {
-    document.getElementById("error").textContent = `Error al cargar el registro: ${e.message}`;
+    document.getElementById("error").textContent = `Error al cargar el personaje: ${e.message}`;
     document.getElementById("error").classList.remove("hidden");
   }
 }
@@ -41,7 +41,7 @@ document.getElementById("form").addEventListener("submit", async (e) => {
     document.getElementById("error").textContent = `Error al actualizar: ${e.message}`;
     document.getElementById("error").classList.remove("hidden");
     btn.disabled = false;
-    btn.textContent = "Guardar cambios";
+    btn.textContent = "Guardar";
   }
 });
 

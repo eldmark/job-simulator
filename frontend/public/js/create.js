@@ -20,9 +20,9 @@ document.getElementById("form").addEventListener("submit", async (e) => {
     await create(payload);
     window.location.href = "index.html";
   } catch (e) {
-    document.getElementById("error").textContent = `Error al crear el registro: ${e.message}`;
+    document.getElementById("error").textContent = `Error al crear el personaje: ${e.message}`;
     document.getElementById("error").classList.remove("hidden");
     btn.disabled = false;
-    btn.textContent = "Crear registro";
+    btn.textContent = "Crear Personaje";
   }
 });

@@ -41,7 +41,7 @@ async function load() {
 
     document.querySelectorAll(".delete-btn").forEach(btn => {
       btn.addEventListener("click", async () => {
-        if (!confirm("¿Eliminar este registro?")) return;
+        if (!confirm("¿Eliminar este personaje?")) return;
         try {
           await remove(btn.dataset.id);
           location.reload();
@@ -51,7 +51,7 @@ async function load() {
       });
     });
   } catch (e) {
-    showError(`Error al cargar los registros: ${e.message}`);
+    showError(`Error al cargar los personajes: ${e.message}`);
   }
 }
 
