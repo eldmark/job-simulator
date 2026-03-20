@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "init-db": "node db/init.js"
+    "init-db": "node db/init.js",
+    "seed": "node db/seed.js"
   },
   "dependencies": {
     "express": "^4.18.2",

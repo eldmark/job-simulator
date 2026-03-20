@@ -9,7 +9,6 @@ const pool = new Pool({
   database: process.env.DB_NAME,
 });
 
-// test de conexión con retry (clave para docker)
 export const connectDB = async () => {
   let retries = 5;
 

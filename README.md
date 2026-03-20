@@ -1,171 +1,180 @@
-# Job Simulator — REST CRUD API
+# One Piece Characters - Job Simulator
 
-## Descripción
+Full-stack CRUD app with a Node.js + Express API, PostgreSQL database, and static frontend.
 
-Se requiere construir una API REST con operaciones CRUD completas, persistencia en base de datos relacional y entorno containerizado. El dominio del recurso queda a criterio del desarrollador.
+The API follows the assignment contract (`campo1..campo6`) while internally storing semantic character fields (`name`, `crew`, `devil_fruit`, `bounty`, `height`, `is_alive`).
 
-El sistema será consumido por un cliente frontend ya existente. La API debe cumplir el contrato definido en este documento de forma exacta. Cualquier desviación del contrato se considera un fallo de integración.
+## Tech Stack
 
----
+- Backend: Node.js, Express
+- Database: PostgreSQL 15
+- Frontend: Static HTML/CSS/JS served by Nginx
+- Orchestration: Docker Compose
 
-## Condiciones de trabajo
+## Repository Structure
 
-Eres un desarrollador backend contratado para entregar un sistema funcional en un tiempo determinado. El pago se acredita únicamente si el sistema es entregado en tiempo y cumple el contrato en su totalidad.
-
-Las siguientes condiciones resultan en terminación del contrato sin compensación parcial:
-
-- El repositorio contiene archivos que no deben ser versionados (`node_modules`, `vendor`, `.env`, binarios, archivos de sistema operativo)
-
-- Entrega fuera del plazo establecido
-- El sistema no levanta con un único comando
-- Algún endpoint no responde o responde de forma incorrecta
-- Los códigos de respuesta HTTP no son los correctos según el estándar REST
-- Las validaciones no están implementadas
-- Los tipos de datos no son respetados
-- Las respuestas no son JSON
-- Almacenamiento en memoria en lugar de base de datos relacional
-- El API no interactua de forma correcta con el frontend.
-
-El nivel de contratación determina el máximo de compensación posible. No existe compensación parcial dentro de un nivel.
-
----
-
-## Contrato de la API
-
-### Estructura del recurso
-
-El recurso expone los siguientes campos con nombres fijos:
-
-| Campo  | Tipo    | Restricciones              |
-| ------ | ------- | -------------------------- |
-| id     | integer | primary key, autoincrement |
-| campo1 | string  | requerido                  |
-| campo2 | string  | requerido                  |
-| campo3 | string  | requerido                  |
-| campo4 | integer | requerido                  |
-| campo5 | float   | requerido                  |
-| campo6 | boolean | requerido                  |
-
-El dominio es libre. Los nombres internos en base de datos y lógica de negocio quedan a criterio del desarrollador.
-
----
-
-### Endpoints
-
-Se requiere implementar los métodos `GET`, `POST`, `PUT` y `DELETE`. El nombre del recurso en la ruta debe seguir las convenciones REST estándar.
-
----
-
-### Validaciones
-
-Todos los campos son requeridos. Los tipos deben ser respetados estrictamente: `campo4` es entero, `campo5` es decimal, `campo6` es booleano.
-
----
-
-### Códigos de respuesta
-
-El uso correcto de códigos HTTP es parte del contrato con el cliente. Todas las respuestas son JSON.
-
----
-
-## Stack
-
-- Lenguaje: Javascript, PHP o Rust — no se aceptan Go ni Python
-- Base de datos: relacional, sin almacenamiento en memoria
-- Containerización: Docker obligatorio
-
-En la carpeta `resources/` se incluyen Dockerfiles de referencia para cada lenguaje y base de datos, y un `.env.example`.
-
----
-
-## Niveles de contratación
-
-La evaluación es **pasa o no pasa**. Indicar el nivel seleccionado al momento de la entrega.
-
----
-
-### Nivel 1 — Junior `(máximo 70/100)`
-
-**Base de datos:** SQLite
-
-**Infraestructura:** `docker-compose.yml` con un único servicio. La base de datos corre embebida dentro del mismo contenedor que la aplicación. `docker-compose up` debe levantar el sistema completo y funcional sin intervención manual.
-
-**Requisitos:**
-- Los cinco endpoints funcionan correctamente contra la base de datos
-- Todas las validaciones están implementadas y retornan los códigos HTTP correspondientes
-- La base de datos persiste los datos correctamente entre operaciones
-- `Dockerfile` y `docker-compose.yml` presentes y funcionales
-
----
-
-### Nivel 2 — Mid `(máximo 85/100)`
-
-**Base de datos:** PostgreSQL
-
-**Infraestructura:** `docker-compose.yml` con dos servicios independientes: aplicación y base de datos. La aplicación debe conectarse a PostgreSQL usando variables de entorno. Un único `docker-compose up` levanta el sistema completo y funcional.
-
-**Requisitos adicionales al Nivel 1:**
-- Archivo `.env` con todas las variables de configuración necesarias
-- Sin credenciales, puertos ni strings de conexión hardcodeados en el código
-- La aplicación maneja correctamente los errores de conexión a la base de datos
-- El servicio de la aplicación no inicia hasta que PostgreSQL esté disponible
-
----
-
-### Nivel 3 — Senior `(máximo 100/100)`
-
-**Base de datos:** PostgreSQL
-
-**Infraestructura:** igual que Nivel 2.
-
-**Requisitos adicionales al Nivel 2:**
-- Endpoint `PATCH` para actualizaciones parciales: solo se modifican los campos presentes en el body, el resto permanece sin cambios
-- `.env.example` en el repositorio con todas las variables necesarias documentadas, sin valores reales
-- `.gitignore` que excluya `node_modules`, `.env`, y archivos de sistema operativo
-- Script SQL de inicialización de esquema ejecutado automáticamente por Docker al primer arranque
-- Estructura de proyecto con separación clara de responsabilidades: configuración de base de datos, definición de rutas y punto de entrada en archivos distintos
-- Historial de commits que refleje un proceso de desarrollo incremental — no se acepta un único commit con todo el trabajo
-
----
-
-## Bonus
-
-Los puntos bonus se suman sobre la nota del nivel entregado. Cada bonus se evalúa de forma independiente.
-
-### Integración full stack `(+10 puntos)`
-
-Integrar el frontend provisto en el mismo `docker-compose.yml` que la API.
-
-Condiciones:
-- Un único `docker-compose.yml` levanta ambos servicios
-- El frontend consume la API sin configuración manual posterior al `docker-compose up`
-- Ambos servicios operativos con un solo comando
-
-### Personalización del frontend `(+5 puntos)`
-
-Adaptar el frontend para que refleje el dominio elegido: etiquetas en el idioma correcto, nombres de campos legibles, y cualquier ajuste visual que mejore la experiencia del usuario final.
-
-Condiciones:
-- El frontend no debe mostrar `campo1`, `campo2`, etc. — deben verse los nombres reales del dominio
-- Los cambios deben ser coherentes con el recurso implementado en la API
-- Aplica únicamente si el bonus de integración también fue completado
-
----
-
-## Configuración del frontend
-
-El frontend provisto requiere dos valores en `public/js/config.js`:
-
-```js
-window.API_URL = "http://localhost:8080"; // URL base de tu API
-window.RESOURCE = "products";             // Nombre del recurso en tu API
+```text
+.
+├── backend/
+│   ├── db/
+│   │   ├── characters-data.js
+│   │   ├── init.js
+│   │   └── seed.js
+│   ├── src/
+│   │   ├── app.js
+│   │   ├── config/db.js
+│   │   ├── controllers/characters-controller.js
+│   │   ├── models/characters-model.js
+│   │   └── routes/character-routes.js
+│   └── package.json
+├── db/
+│   └── init.sql
+├── frontend/
+│   └── public/
+├── docker-compose.yml
+└── .env.example
 ```
 
-`RESOURCE` debe coincidir exactamente con el nombre que usaste en las rutas de tu API.
+## Quick Start (Docker)
 
----
+1. Create your environment file:
 
-## Entrega
+```bash
+cp .env.example .env
+```
 
-- Repositorio en GitHub con visibilidad pública
-- El sistema levanta con un único comando
+2. Fill `.env` with values (example):
+
+```env
+DB_HOST=db
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=onepiece
+PORT=8080
+```
+
+3. Start all services:
+
+```bash
+docker compose up --build
+```
+
+4. Open:
+
+- Frontend: http://localhost:3000
+- API: http://localhost:8080
+- PostgreSQL exposed on host: localhost:5433
+
+## Services
+
+- `db`: PostgreSQL with healthcheck and schema bootstrap from `db/init.sql`
+- `api`: Express server on port 8080, starts only after DB is healthy
+- `frontend`: Nginx serving static UI on port 3000
+
+## Database Initialization and Seed
+
+Startup flow:
+
+1. PostgreSQL container runs `db/init.sql` on first DB initialization.
+2. API container runs `npm run init-db` before starting the server.
+3. `init-db` checks `characters` count:
+	 - If table is empty: inserts sample records.
+	 - If not empty: skips seed to avoid duplicates.
+
+Single source of seed data:
+
+- `backend/db/characters-data.js`
+
+Manual seed command:
+
+```bash
+cd backend
+npm run seed
+```
+
+## Backend Scripts
+
+From `backend/`:
+
+- `npm run start`: run API normally
+- `npm run dev`: run API with nodemon auto-reload
+- `npm run init-db`: idempotent seed initialization
+- `npm run seed`: force insert seed data
+
+## API Contract
+
+Base URL:
+
+```text
+http://localhost:8080/characters
+```
+
+Resource fields (contract):
+
+- `id` (integer, auto-increment)
+- `campo1` (string, required)
+- `campo2` (string, required)
+- `campo3` (string, required)
+- `campo4` (integer, required)
+- `campo5` (float, required)
+- `campo6` (boolean, required)
+
+Internal DB mapping:
+
+- `campo1 -> name`
+- `campo2 -> crew`
+- `campo3 -> devil_fruit`
+- `campo4 -> bounty`
+- `campo5 -> height`
+- `campo6 -> is_alive`
+
+## Endpoints
+
+- `GET /characters`
+- `GET /characters/:id`
+- `POST /characters`
+- `PUT /characters/:id`
+- `PATCH /characters/:id`
+- `DELETE /characters/:id`
+
+Expected behavior:
+
+- `201` on create
+- `204` on delete
+- `400` on invalid payload
+- `404` when record does not exist
+
+## Example Request
+
+```bash
+curl -X POST http://localhost:8080/characters \
+	-H "Content-Type: application/json" \
+	-d '{
+		"campo1": "Monkey D. Luffy",
+		"campo2": "Straw Hat",
+		"campo3": "Hito Hito no Mi, Model: Nika",
+		"campo4": 3000000,
+		"campo5": 1.74,
+		"campo6": true
+	}'
+```
+
+## Frontend Config
+
+Configured in `frontend/public/js/config.js`:
+
+```js
+window.API_URL = "http://localhost:8080";
+window.RESOURCE = "characters";
+```
+
+## Development Notes
+
+- Backend code changes auto-restart the API (`nodemon`) when running through Docker.
+- If you need a clean DB re-initialization (schema + seed), remove volumes:
+
+```bash
+docker compose down -v
+docker compose up --build
+```
